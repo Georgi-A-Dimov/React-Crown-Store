@@ -1,10 +1,17 @@
 import './App.scss'
-import CategoriesMenu from './components/categories-menu/categories-menu.component';
+import { Routes, Route } from 'react-router-dom';
+
+import Home from './routes/home/home.component';
+import Navigation from './routes/navigation/navigation.component';
 
 function App() {
 
   return (
-    <CategoriesMenu />
+    <Routes>
+      <Route path='/' element={<Navigation/>}>
+        <Route index element={<Home/>} />
+      </Route>
+    </Routes>
   );
 }
 
