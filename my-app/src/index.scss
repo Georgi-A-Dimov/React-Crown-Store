@@ -1,6 +1,6 @@
 html {
     //note: this sets font to base 10. Derived from 10/16=.625 * 100= 62.5%
-  //means you when you set font to rem 2rem is equal to 20px
+    // when you set font to rem, 2rem is equal to 20px
     font-size: 62.5%;
 }
 
@@ -17,12 +17,11 @@ a {
 }
 
 h1 {
-    /* Sets the font size to 2.4rem, which is 24px */
+
     font-size: 2.4rem;
 }
 
 p {
-    /* Sets the font size to 1.4rem, which is 14px */
     font-size: 1.4rem;
 }
 
