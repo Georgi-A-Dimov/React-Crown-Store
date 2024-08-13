@@ -23,7 +23,7 @@ const Category = () => {
             
             <div className="category-container">
                 {products &&
-                    products.map((product) => (<ProductCard key={product.id} product={product} />))
+                    products.map((product) => (<ProductCard key={product.id} product={product}/>))
                 }
             </div>
         </Fragment>

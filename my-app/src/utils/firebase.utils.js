@@ -18,6 +18,8 @@ import {
     writeBatch,
     query,
     getDocs,
+    updateDoc,
+    arrayUnion,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -47,8 +49,8 @@ export const addCollectionAndDocuments = async (collectionName, objectToAdd, fie
     const batch = writeBatch(db);
 
     objectToAdd.forEach((object) => {
-      const docRef = doc(collectionRef, object[field].toLowerCase());
-      batch.set(docRef, object);
+        const docRef = doc(collectionRef, object[field].toLowerCase());
+        batch.set(docRef, object);
     });
 
     await batch.commit();
@@ -67,6 +69,44 @@ export const getCategoriesAndDocuments = async () => {
 
     return categoryMap;
 };
+
+// temp start
+export const getProductReviews = async (productId) => {
+    const docRef = doc(db, 'product-reviews', productId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        try {
+            return docSnap.data();
+        } catch (error) {
+            console.error('Error fetching document:', error);
+        };
+    };
+}
+
+export const setProductReview = async (productId, reviewText) => {
+    const productDocRef = doc(db, "product-reviews", productId);
+    const reviewSnapshot = await getDoc(productDocRef);
+    const newReview = {
+        review: reviewText,
+        createdAt: new Date(),
+    };
+
+    if (!reviewSnapshot.exists()) {
+        try {
+            await setDoc(productDocRef, {reviews: [newReview]});
+        } catch (error) {
+            console.log('error creating product review', error.message);
+        }
+    }
+
+    await updateDoc(productDocRef, {
+        reviews: arrayUnion(newReview)
+    });
+
+    console.log("Review added successfully!");
+}
+// temp end
 
 export const createUserDocumentFromAuth = async (userAuth, additionalInformation) => {
     const userDocRef = doc(db, 'users', userAuth.uid);
