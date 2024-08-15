@@ -84,10 +84,13 @@ export const getProductReviews = async (productId) => {
     };
 }
 
-export const setProductReview = async (productId, reviewText) => {
+export const setProductReview = async (productId, reviewText, userId, username, rating) => {
     const productDocRef = doc(db, "product-reviews", productId);
     const reviewSnapshot = await getDoc(productDocRef);
     const newReview = {
+        rating: rating,
+        username: username,
+        userId: userId,
         review: reviewText,
         createdAt: new Date(),
     };
@@ -106,6 +109,53 @@ export const setProductReview = async (productId, reviewText) => {
 
     console.log("Review added successfully!");
 }
+
+export const editReview = async (productId, userId, newText) => {
+    try {
+        const productDocRef = doc(db, "product-reviews", productId);
+        const productDoc = await getDoc(productDocRef);
+
+        if (productDoc.exists()) {
+            let reviews = productDoc.data().reviews || [];
+
+            reviews = reviews.map(review => 
+                review.userId === userId ? 
+                { ...review, review: newText } 
+                : 
+                review
+            );
+
+            await updateDoc(productDocRef, { reviews });
+
+            console.log("Review updated successfully!");
+        } else {
+            console.log("No such document!");
+        }
+    } catch (error) {
+        console.error("Error editing review: ", error);
+    }
+}
+
+export const deleteReview = async (productId, userId) => {
+    try {
+        const productDocRef = doc(db, "product-reviews", productId);
+        const productDoc = await getDoc(productDocRef);
+
+        if (productDoc.exists()) {
+            let reviews = productDoc.data().reviews || [];
+            reviews = reviews.filter(review => review.userId !== userId);
+
+            await updateDoc(productDocRef, { reviews });
+
+            console.log("Review deleted successfully!");
+        } else {
+            console.log("No such document!");
+        }
+    } catch (error) {
+        console.error("Error deleting review: ", error);
+    }
+};
+
 // temp end
 
 export const createUserDocumentFromAuth = async (userAuth, additionalInformation) => {

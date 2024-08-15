@@ -93,7 +93,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.5rem;
 
       h3 {
         font-size: 1.2rem;
@@ -107,13 +106,13 @@
     }
 
     .review-text {
-      font-size: 1rem;
+      font-size: 1.3rem;
       color: #555;
       margin-bottom: 0.5rem;
     }
 
     .review-author {
-      font-size: 0.9rem;
+      font-size: 1.4rem;
       color: #999;
       text-align: right;
     }
@@ -148,4 +147,54 @@ textarea {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+// File: src/styles/buttons.scss
+
+.edit-delete-container {
+  display: flex; // Use Flexbox to layout children in a row
+  gap: 10px; // Space between buttons
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1.2rem; // Adjust icon size
+  transition: color 0.3s, transform 0.3s;
+  padding: 5px;
+
+  &:hover {
+    color: #007bff; // Change color on hover
+    transform: scale(1.1); // Slightly enlarge the icon on hover
+  }
+  
+  &:focus {
+    outline: none; // Remove focus outline
+  }
+  
+  &:active {
+    transform: scale(1); // Reset scale when button is pressed
+  }
+}
+
+// Edit button specific styles
+.edit-button {
+  color: #4caf50; // Green color for edit button
+  
+  &:hover {
+    color: #388e3c; // Darker green on hover
+  }
+}
+
+// Delete button specific styles
+.delete-button {
+  color: #f44336; // Red color for delete button
+  
+  &:hover {
+    color: #c62828; // Darker red on hover
+  }
 }
