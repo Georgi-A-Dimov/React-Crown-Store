@@ -7,6 +7,8 @@ import {
     signInWithEmailAndPassword,
     signInWithPopup,
     signOut,
+    updatePassword,
+    updateProfile,
 } from "firebase/auth";
 
 import {
@@ -97,7 +99,7 @@ export const setProductReview = async (productId, reviewText, userId, username, 
 
     if (!reviewSnapshot.exists()) {
         try {
-            await setDoc(productDocRef, {reviews: [newReview]});
+            await setDoc(productDocRef, { reviews: [newReview] });
         } catch (error) {
             console.log('error creating product review', error.message);
         }
@@ -118,11 +120,11 @@ export const editReview = async (productId, userId, newText) => {
         if (productDoc.exists()) {
             let reviews = productDoc.data().reviews || [];
 
-            reviews = reviews.map(review => 
-                review.userId === userId ? 
-                { ...review, review: newText } 
-                : 
-                review
+            reviews = reviews.map(review =>
+                review.userId === userId ?
+                    { ...review, review: newText }
+                    :
+                    review
             );
 
             await updateDoc(productDocRef, { reviews });
@@ -197,4 +199,27 @@ export const signOutUser = async () => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) => {
     onAuthStateChanged(auth, callback);
+};
+
+export const updateUserProfile = async (currentUser, displayName) => {
+    const userRef = doc(db, 'users', currentUser.uid);
+
+    if (currentUser) {
+        try {
+            await updateProfile(currentUser, { displayName });
+            await updateDoc(userRef, { displayName: displayName });
+        } catch (error) {
+            console.error("Error:", error);
+        };
+    };
+};
+
+export const updateUserPassword = async (currentUser, authProvider) => {
+    if (currentUser && authProvider === 'password') {
+        try {
+           await updatePassword(currentUser, password);
+        } catch (error) {
+            console.error("Error updating password: ", error);
+        };
+    };
 };

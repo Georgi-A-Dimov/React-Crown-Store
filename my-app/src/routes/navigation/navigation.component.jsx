@@ -1,5 +1,5 @@
 import { Fragment, useContext } from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate} from "react-router-dom";
 
 import CrownLogo from '../../assets/crown.svg?react';
 import './navigation.styles.scss';
@@ -12,6 +12,16 @@ import { CartContext } from "../../contexts/cart.context";
 const Navigation = () => {
     const { currentUser } = useContext(UserContext);
     const { isCartOpen } = useContext(CartContext);
+    const navigate = useNavigate(); 
+
+    const handleSignOut = async () => {
+        try {
+            await signOutUser();
+            navigate('/');
+        } catch (error) {
+            console.error('Sign out error', error);
+        }
+    };
 
     return (
         <Fragment>
@@ -27,10 +37,10 @@ const Navigation = () => {
 
                     {currentUser ?
                         (<>
-                        <span className="nav-link">
+                        <Link className="nav-link" to='/profile'>
                             Welcome {currentUser.displayName}
-                        </span>
-                        <span className="nav-link" onClick={signOutUser}>
+                        </Link>
+                        <span className="nav-link" onClick={handleSignOut}>
                             SIGN OUT
                         </span>
                         </>) 

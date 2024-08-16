@@ -1,0 +1,120 @@
+/* Profile Container */
+.profile-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px; // Adjust width as needed
+    margin: 40px auto;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 20px;
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .profile-img {
+            width: 120px; // Adjust width as needed
+            height: 120px; // Adjust height as needed
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ddd; // Light border around the image
+            margin-bottom: 20px; // Space below the image
+        }
+    }
+
+    .form-group {
+        display: flex;
+        align-items: center;
+        gap: 15px; // Space between items
+        margin-bottom: 20px; // Space below the form group
+
+        h3 {
+            margin: 0;
+            font-size: 18px;
+            width: 150px; // Fixed width for labels
+            text-align: right; // Aligns text to the right
+        }
+
+        input {
+            flex: 1; // Takes up remaining space
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff; // Primary button color
+            color: #fff;
+            transition: background-color 0.3s, transform 0.2s;
+
+            &:hover {
+                background-color: #0056b3; // Darker color on hover
+                transform: scale(1.05); // Slightly scales up the button
+            }
+        }
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        width: 100%; // Full width of the container
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+            &.save {
+                background-color: #007bff;
+                color: #fff;
+
+                &:hover {
+                    background-color: #0056b3;
+                }
+            }
+
+            &.cancel {
+                background-color: #6c757d;
+                color: #fff;
+
+                &:hover {
+                    background-color: #5a6268;
+                }
+            }
+        }
+    }
+
+    p {
+        font-size: 16px;
+        color: #333;
+        margin-top: 20px;
+        text-align: center;
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

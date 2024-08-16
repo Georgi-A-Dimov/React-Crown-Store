@@ -6,7 +6,7 @@ import Navigation from './routes/navigation/navigation.component';
 import Authentication from './routes/authentication/authentication.component';
 import Shop from './routes/shop/shop.component';
 import Checkout from './routes/checkout/checkout.component';
-// import ItemDetails from './routes/item-details/item-details.component';
+import UserProfile from './routes/profile/profile.component';
 
 function App() {
 
@@ -15,6 +15,7 @@ function App() {
       <Route path='/' element={<Navigation/>}>
         <Route index element={<Home/>} />
         <Route path='auth' element={<Authentication/>}/>
+        <Route path='profile' element={<UserProfile/>}/>
         <Route path='shop/*' element={<Shop/>}/>
         <Route path='checkout' element={<Checkout/>}/>
       </Route>
