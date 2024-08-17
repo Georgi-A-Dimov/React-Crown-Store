@@ -1,0 +1,55 @@
+// Variables
+$primary-color: #007bff;
+$hover-color: darken($primary-color, 15%);
+$text-color: #333;
+$background-color: #f7f7f7;
+$title-color: #222;
+$description-color: #666;
+
+.notfound-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: $background-color;
+    color: $text-color;
+
+    .notfound-content {
+        text-align: center;
+        max-width: 600px;
+        padding: 20px;
+
+        .notfound-title {
+            font-size: 10rem;
+            font-weight: 900;
+            color: $title-color;
+            margin-bottom: 20px;
+        }
+
+        .notfound-message {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .notfound-description {
+            font-size: 1rem;
+            margin-bottom: 30px;
+            color: $description-color;
+        }
+
+        .notfound-button {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: $primary-color;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: $hover-color;
+            }
+        }
+    }
+}

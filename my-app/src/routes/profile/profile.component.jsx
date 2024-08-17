@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/user.context';
-import profileImage from '../../assets/profile.png';
 
+import profileImage from '../../assets/profile.png';
 import './profile.styles.scss';
 import { updateUserPassword, updateUserProfile } from '../../utils/firebase.utils';
+import { handleFirebaseError } from '../../errors/firebase-errors';
 
 const UserProfile = () => {
     const { currentUser } = useContext(UserContext);
@@ -13,12 +14,12 @@ const UserProfile = () => {
     const [authProvider, setAuthProvider] = useState(null);
     const [toggleName, setToggleName] = useState(false);
     const [togglePass, setTogglePass] = useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         if (currentUser) {
             const provider = currentUser.providerData[0].providerId;
             setAuthProvider(provider);
-            console.log(currentUser);
         }
     }, [currentUser]);
 
@@ -29,13 +30,37 @@ const UserProfile = () => {
         setTogglePass(!togglePass);
     };
 
-    const handleNameChange = () => {
-        updateUserProfile(currentUser, displayName);
+    const handleNameChange = async () => {
+        if (!displayName.trim()) {
+            setError('Display name cannot be empty');
+            return;
+        };
+
+        try {
+            setError('');
+            await updateUserProfile(currentUser, displayName);
+            setToggleName(false);
+        } catch (error) {
+            const errorMessage = handleFirebaseError(error);
+            setError(errorMessage);
+        }
     };
 
-    const handlePasswordChange = () => {
-        //to do: check if pass is valid!
-        updateUserPassword(currentUser, authProvider);
+    const handlePasswordChange = async () => {
+        if (currentUser && authProvider === 'password') {
+            if (password.length < 6) {
+                setError('Password must be at least 6 characters long');
+                return;
+            }
+            try {
+                setError('');
+                await updateUserPassword(currentUser, password);
+                setTogglePass(false);
+            } catch (error) {
+                const errorMessage = handleFirebaseError(error);
+                setError(errorMessage);
+            }
+        }
     };
 
     return (
@@ -46,7 +71,7 @@ const UserProfile = () => {
             </div>
 
             {toggleName ?
-                <div className="form-group">
+                <div className={`form-group ${error ? 'error' : ''}`}>
                     <h3>Username:</h3>
                     <input
                         type="text"
@@ -56,6 +81,7 @@ const UserProfile = () => {
                         onChange={(e) => setDisplayName(e.target.value)}
                     />
                     <button onClick={handleNameChange}>Update Name</button>
+                    {error && <p className="error-message">{error}</p>}
                 </div>
                 :
                 <div className="form-group">
@@ -67,7 +93,7 @@ const UserProfile = () => {
 
             {authProvider === 'password' &&
                 togglePass ?
-                <div className="form-group">
+                <div className={`form-group ${error ? 'error' : ''}`}>
                     <label htmlFor="password">New Password:</label>
                     <input
                         type="password"
@@ -76,11 +102,12 @@ const UserProfile = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <button onClick={handlePasswordChange}>Update Password</button>
+                    {error && <p className="error-message">{error}</p>}
                 </div>
                 :
                 <div className="form-group">
                     <h3>Password:</h3>
-                    <span>......</span>
+                    <span>******</span>
                     <button onClick={togglePassHandler}>Edit</button>
                 </div>
             }

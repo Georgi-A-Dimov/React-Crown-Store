@@ -6,43 +6,33 @@ import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import { updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { handleFirebaseError } from "../../errors/firebase-errors";
 
 const SignUpForm = () => {
 
-    const defaultFormFields = {
+    const [formFields, setFormFields] = useState({
         displayName: '',
         email: '',
         password: '',
-        confirmPassword: '',
-    };
-    const [formFields, setFormFields] = useState(defaultFormFields);
+        confirmPassword: ''
+    });
     const { displayName, email, password, confirmPassword } = formFields;
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
-
-    const resetFormFields = () => {
-        setFormFields(defaultFormFields);
-    }
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        if (password !== confirmPassword) {
-            alert('Passwords do not match');
-            return;
-        };
-
-        try {
-            const { user } = await createUserAuthWithEmailAndPassword(email, password);
-            await createUserDocumentFromAuth(user, { displayName });
-            await updateProfile(user, { displayName: displayName });
-            resetFormFields();
-            navigate('/');
-
-        } catch (error) {
-            if (error.code === 'auth/email-already-in-use') {
-                alert('User with this email already exists!');
-            };
-
-            console.log(error);
+        if (validate()) {
+            try {
+                const { user } = await createUserAuthWithEmailAndPassword(email, password);
+                await createUserDocumentFromAuth(user, { displayName });
+                await updateProfile(user, { displayName: displayName });
+                navigate('/');
+    
+            } catch (error) {
+                console.log(error);
+                
+            }; 
         };
 
     };
@@ -50,6 +40,40 @@ const SignUpForm = () => {
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormFields({ ...formFields, [name]: value });
+    };
+
+    const validate = () => {
+        let valid = true;
+        let newErrors = {};
+
+        if (!formFields.displayName) {
+            valid = false;
+            newErrors.displayName = "Display Name is required";
+        }
+
+        if (!formFields.email) {
+            valid = false;
+            newErrors.email = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(formFields.email)) {
+            valid = false;
+            newErrors.email = "Email address is invalid";
+        }
+
+        if (!formFields.password) {
+            valid = false;
+            newErrors.password = "Password is required";
+        } else if (formFields.password.length < 6) {
+            valid = false;
+            newErrors.password = "Password must be at least 6 characters long";
+        }
+
+        if (formFields.password !== formFields.confirmPassword) {
+            valid = false;
+            newErrors.confirmPassword = "Passwords do not match";
+        }
+
+        setErrors(newErrors);
+        return valid;
     };
 
     return (
@@ -64,6 +88,7 @@ const SignUpForm = () => {
                     onChange={handleChange}
                     name="displayName"
                     value={displayName}
+                    error={errors.displayName}
                 />
 
                 <FormInput
@@ -73,6 +98,7 @@ const SignUpForm = () => {
                     onChange={handleChange}
                     name="email"
                     value={email}
+                    error={errors.email}
                 />
 
                 <FormInput
@@ -81,7 +107,8 @@ const SignUpForm = () => {
                     required
                     onChange={handleChange}
                     name="password"
-                    value={password} 
+                    value={password}
+                    error={errors.password}
                 />
 
                 <FormInput
@@ -90,7 +117,8 @@ const SignUpForm = () => {
                     required
                     onChange={handleChange}
                     name="confirmPassword"
-                    value={confirmPassword} 
+                    value={confirmPassword}
+                    error={errors.confirmPassword}
                 />
 
                 <Button type="submit"> Sign Up </Button>

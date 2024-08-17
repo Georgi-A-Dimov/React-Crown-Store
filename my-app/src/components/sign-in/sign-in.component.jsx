@@ -5,6 +5,7 @@ import "./sign-in.styles.scss";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import { useNavigate } from "react-router-dom";
+import { handleFirebaseError } from "../../errors/firebase-errors";
 
 const SignInForm = () => {
 
@@ -14,6 +15,7 @@ const SignInForm = () => {
     };
 
     const [formFields, setFormFields] = useState(defaultFormFields);
+    const [error, setError] = useState('');
     const { email, password } = formFields;
     const navigate = useNavigate();
 
@@ -29,18 +31,8 @@ const SignInForm = () => {
             resetFormFields();
             navigate('/');
         } catch (error) {
-            switch (error.code) {
-                case 'auth/wrong-password':
-                    alert('incorect password for email');
-                    break;
-
-                case 'auth/user-not-found':
-                    alert('No user associated with this email');
-                    break;
-
-                default:
-                    console.log(error);;
-            };
+            const errorMessage = handleFirebaseError(error);
+            setError(errorMessage);
         };
 
     };
@@ -67,6 +59,7 @@ const SignInForm = () => {
                     onChange={handleChange}
                     name="email"
                     value={email}
+                    error={error}
                 />
 
                 <FormInput
@@ -76,6 +69,7 @@ const SignInForm = () => {
                     onChange={handleChange}
                     name="password"
                     value={password}
+                    error={error}
                 />
 
                 <div className="buttons-container">

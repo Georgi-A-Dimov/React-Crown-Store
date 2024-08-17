@@ -192,7 +192,11 @@ export const createUserAuthWithEmailAndPassword = async (email, password) => {
 export const signInUserAuthWithEmailAndPassword = async (email, password) => {
     if (!email || !password) return;
 
-    return await signInWithEmailAndPassword(auth, email, password);
+    try {
+        return await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+        throw error
+    };
 };
 
 export const signOutUser = async () => await signOut(auth);
@@ -210,16 +214,17 @@ export const updateUserProfile = async (currentUser, displayName) => {
             await updateDoc(userRef, { displayName: displayName });
         } catch (error) {
             console.error("Error:", error);
+            throw error;
         };
     };
 };
 
-export const updateUserPassword = async (currentUser, authProvider) => {
-    if (currentUser && authProvider === 'password') {
-        try {
-           await updatePassword(currentUser, password);
-        } catch (error) {
-            console.error("Error updating password: ", error);
-        };
+export const updateUserPassword = async (currentUser, password) => {
+    try {
+        await updatePassword(currentUser, password);
+    } catch (error) {
+        console.error("Error updating password: ", error);
+        throw error;
     };
+
 };

@@ -67,6 +67,20 @@
                 transform: scale(1.05); // Slightly scales up the button
             }
         }
+
+        .error-message {
+            margin-top: 5px;
+            color: #e74c3c;
+            font-size: 14px;
+        }
+    }
+
+    .form-group.error input {
+        border-color: #e74c3c;
+    }
+
+    .form-group.error .error-message {
+        display: block;
     }
 
     .form-actions {
